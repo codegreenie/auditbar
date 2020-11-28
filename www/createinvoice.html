@@ -1,0 +1,568 @@
+<div class="page" data-name="createinvoice">
+
+ <div class="popover popover-currency-change" style="width: 80px;">
+    <div class="popover-inner">
+      <div class="list">
+        <ul id="">
+
+          <li onclick = "changeCurrency('NGN')">
+            <a class='list-button item-link' href='#'>
+            <span style="font-weight: bold; font-size: 18px; margin-left:5px;">
+              NGN
+            </span>
+           </a>
+          </li>
+
+
+
+          <li onclick = "changeCurrency('£')">
+            <a class='list-button item-link' href='#'>
+            <span style="font-weight: bold; font-size: 18px; margin-left:5px;">
+              £
+            </span>
+           </a>
+          </li>
+
+
+           <li onclick = "changeCurrency('€')">
+            <a class='list-button item-link' href='#'>
+            <span style="font-weight: bold; font-size: 18px; margin-left:5px;">
+              €
+            </span>
+           </a>
+          </li>
+
+
+
+          <li onclick = "changeCurrency('$')">
+            <a class='list-button item-link' href='#'>
+            <span style="font-weight: bold; font-size: 18px; margin-left:5px;">
+              $
+            </span>
+           </a>
+          </li>
+          
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      <div class="navbar no-hairlines-md no-hairlines-ios">
+              <div class="navbar-inner bg-color-white no-hairlines-md no-hairlines-ios">
+
+                <div class="left">
+                  <a href="/invoices/" class="link text-color-gray">
+                  <i class="icon f7-icons">arrow_left</i>
+                  </a>
+                </div>
+
+               
+
+                <div class="title">
+                 
+                 
+                  <span class="company-name"></span>
+        
+                </div>
+
+                
+                <div class="right">
+                  <a class="link popover-open text-color-black" href="#" data-popover=".popover-currency-change">
+                  <span id="currency-plate">
+                    NGN
+                  </span>
+                </a>
+                <span class="md-only">&nbsp;</span>
+                </div>
+
+              
+                
+
+               
+             
+              </div>
+            </div>
+  
+
+
+  <div class="page-content" style="padding-bottom:40px;">
+
+
+
+
+
+    <div class="popup add-item-popup">
+      <div class="page">
+        <div class="page-content">
+
+          <div class="block">
+          <a href="#" class="popup-close link" data-popup=".add-item-popup">
+            <i class="icon f7-icons" style="font-size: 32px;">arrow_left</i>
+          </a>
+
+          </div>
+
+          <div class="block">
+          <div class="bg-color-blue block text-color-white" style="padding-top: 15px; padding-bottom: 15px; border-radius: 8px; height: 50px; margin-top: 0px; margin-bottom:0px;">
+          <h3>Add Item</h3>
+          
+         </div>
+        </div>
+
+          
+  <form id="" class="list no-hairlines-md no-hairlines-ios" style="margin-top: 0px;" method="post">
+
+        
+
+      <ul style="margin-top: 0px;">
+
+         <li class="item-content item-input item-input-outline">
+          <div class="item-inner">
+            <div class="item-title item-floating-label">Item Name</div>
+            <div class="item-input-wrap">
+              <input type="text" placeholder="" id="item-name">
+              <span class="input-clear-button"></span>
+            </div>
+          </div>
+        </li>
+
+
+        <li class="item-content item-input item-input-outline">
+            <div class="item-inner">
+              <div class="item-title item-floating-label">Item Price</div>
+              <div class="item-input-wrap">
+                <input type="tel" placeholder="" id="item-price">
+                <span class="input-clear-button"></span>
+              </div>
+            </div>
+          </li>
+
+
+        
+         
+          <li class="item-content item-input item-input-outline">
+            <div class="item-inner">
+              <div class="item-title item-floating-label">Item Quantity</div>
+              <div class="item-input-wrap">
+                <input type="tel" placeholder="" id="item-quantity">
+                <span class="input-clear-button"></span>
+              </div>
+            </div>
+          </li>
+
+
+
+          <li class="item-content item-input item-input-outline">
+            <div class="item-inner">
+              <div class="item-title item-floating-label">Item Description</div>
+              <div class="item-input-wrap">
+                <textarea placeholder="" rows="2" id="item-description"></textarea>
+                <span class="input-clear-button"></span>
+              </div>
+            </div>
+          </li>
+         
+      
+
+       
+      </ul>
+
+
+      <div class="block" style="margin-top:10px;">
+      <button type="button" class="button button-fill color-blue button-large" id="add-item-button">Add</button>
+      </div>
+    </form>
+
+
+          
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
+
+     <div class="popup view-list-popup">
+      <div class="page">
+        <div class="page-content">
+
+          <div class="block">
+          <a href="#" class="popup-close link" data-popup=".view-list-popup">
+            <i class="icon f7-icons" style="font-size: 32px;">arrow_left</i>
+          </a>
+
+          <a href="#" class="popup-open" data-popup=".add-item-popup">
+          <span style="float:right;"><i class="icon f7-icons">add_round</i></span>
+          </a>
+          </div>
+
+          <div class="block">
+          <div class="bg-color-blue block text-color-white" style="padding-top: 15px; padding-bottom: 15px; border-radius: 8px; height: 50px; margin-top: 0px; margin-bottom:0px;">
+          <h3>Invoice list</h3>
+          
+         </div>
+        </div>
+
+          
+            <div class="list no-hairlines-md no-hairlines-ios">
+            <ul id="invoice-list-container">
+                
+
+              </ul>
+
+            </div>
+
+          
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+    <div class="popup select-bank-account-popup">
+      <div class="page">
+        <div class="page-content">
+
+          <div class="block">
+          <a href="#" class="popup-close link" data-popup=".select-bank-account-popup">
+            <i class="icon f7-icons" style="font-size: 32px;">arrow_left</i>
+          </a>
+
+
+
+          <a href="/addbankaccount/" class="popup-close">
+          <span style="float:right;"><i class="icon f7-icons">add_round</i></span>
+          </a>
+
+          </div>
+
+          <div class="block">
+          <div class="bg-color-blue block text-color-white" style="padding-top: 15px; padding-bottom: 15px; border-radius: 8px; height: 50px; margin-top: 0px; margin-bottom:0px;">
+          <h3>Select Bank account</h3>
+          
+         </div>
+        </div>
+
+          
+            <div class="list no-hairlines-md no-hairlines-ios" id="bank-account-list-container">
+           
+
+            </div>
+
+          
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
+      <div class="popup preview-invoice-popup">
+      <div class="page">
+
+        <div class="navbar no-hairlines-md no-hairlines-ios">
+              <div class="navbar-inner bg-color-white no-hairlines-md no-hairlines-ios text-color-blue">
+
+                <div class="left">
+                  <a href="#" class="popup-close link" data-popup=".preview-invoice-popup">
+                  <i class="icon f7-icons" style="font-size: 32px;">arrow_left</i>
+                 </a>
+                </div>
+
+               
+
+                <div class="title">Invoice Preview</div>
+
+               
+                <div class="right" id="activate-send-invoice">
+                  <span id="send-invoice-button">
+                  <i class="icon f7-icons" style="font-size: 32px;">paper_plane</i>
+                  Send
+                  </span>
+                  <img src='imgs/assets/loading.gif' style='max-width: 50px; display: block;' id="waiting-to-send-invoice-loader">
+                  <span class="md-only">&nbsp;&nbsp;</span>
+                </div>
+
+               
+             
+              </div>
+        </div>
+
+
+
+        <div class="page-content" style="padding-bottom: 70px;">
+
+
+
+          <div id="preview-invoice" class="block">
+            <img src="imgs/assets/loading.gif" style="max-width: 160px; display: block; margin:100px auto 0px;">
+            <h2 class="text-center">Generating invoice preview...</h2>
+          </div>
+
+
+
+          
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+    <div class="popup invoice-sent-popup">
+      <div class="page">
+        <div class="page-content">
+
+         
+
+          <div class="block text-center">
+                
+            <img src="imgs/assets/check.png" style="margin:200px auto 0px; display: block; max-width: 80px;">
+            <h2>Invoice sent to: <br>
+            <span id="sent-to-company-name"></span>
+            </h2>
+
+
+            <br><br>
+
+          <button class="col button button-large button-raised button-fill" id="invoice-done-button">
+             Done
+          </button>
+
+
+          </div>
+
+
+
+
+          
+            
+
+          
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
+   
+    <div class="block">
+
+      <h2 class="text-center">New Invoice</h2>
+      
+
+
+      <form class="list no-hairlines-md no-hairlines-ios" style="margin-top: 0px;" method="post">
+
+        <input type="hidden" name="currency" value="NGN" id="currency">
+
+      <ul style="margin-top: 0px;">
+
+      
+
+      <div class="bg-color-blue block text-color-white" style="padding-top: 15px; padding-bottom: 15px; border-radius: 8px; height: 50px; margin-bottom: 0px;">
+        <h3>Biller details</h3>
+        
+      </div>
+
+        <li class="item-content item-input item-input-outline">
+          <div class="item-inner">
+            <div class="item-title item-floating-label">Bill to</div>
+            <div class="item-input-wrap">
+              <input type="text" placeholder="" id="biller" maxlength="40">
+              <span class="input-clear-button"></span>
+            </div>
+          </div>
+        </li>
+
+
+        <li class="item-content item-input item-input-outline">
+          <div class="item-inner">
+            <div class="item-title item-floating-label">Biller Email</div>
+            <div class="item-input-wrap">
+              <input type="email" placeholder="" id="biller-email" maxlength="40">
+              <span class="input-clear-button"></span>
+            </div>
+          </div>
+        </li>
+
+
+        <li class="item-content item-input item-input-outline">
+          <div class="item-inner">
+            <div class="item-title item-floating-label">Bill Phone</div>
+            <div class="item-input-wrap">
+              <input type="tel" placeholder="" id="biller-phone" maxlength="11">
+              <span class="input-clear-button"></span>
+            </div>
+          </div>
+        </li>
+
+        <li class="item-content item-input item-input-outline">
+          <div class="item-inner">
+            <div class="item-title item-floating-label">Biller address</div>
+            <div class="item-input-wrap">
+              <textarea placeholder="" rows="2" id="biller-address"></textarea>
+              <span class="input-clear-button"></span>
+            </div>
+          </div>
+        </li>
+
+
+         <li class="item-content item-input item-input-outline">
+            <div class="item-inner">
+              <div class="item-title item-floating-label">Invoice due date</div>
+              <div class="item-input-wrap">
+                <input type="text" placeholder="" id="invoice-due-date" readonly="">
+                <span class="input-clear-button"></span>
+              </div>
+            </div>
+          </li>
+         
+
+
+        <div class="bg-color-blue block text-color-white" style="padding-top: 15px; padding-bottom: 15px; border-radius: 8px; height: 50px; margin-bottom: 0px;">
+
+          <a href="#" class="popup-open text-color-white" data-popup=".view-list-popup">
+            <span style="float:right;"><i class="icon f7-icons">eye</i> View list</span>
+          </a>
+            <h3 style="float:left;margin:0px;">Item list</h3>
+         
+      </div>
+
+     
+
+      <br>
+
+        <div id="invoice-page-list">
+
+        
+
+      </div>
+        
+        
+     
+
+
+
+        <div class="bg-color-blue block text-color-white" style="padding-top: 15px; padding-bottom: 15px; border-radius: 8px; height: 50px; margin-bottom: 0px;">
+      <h3>Other Details</h3>
+        
+      </div>
+        
+        
+
+        
+    
+
+
+
+        <li class="item-content item-input item-input-outline">
+          <div class="item-inner">
+            <!-- <div class="item-title item-floating-label">Bank Details</div> -->
+            <div class="item-input-wrap">
+              <textarea placeholder="Bank account details" rows="2" id="bank-details"></textarea>
+              <span class="input-clear-button"></span>
+            </div>
+          </div>
+        </li>
+
+
+
+        <li class="item-content item-input item-input-outline">
+          <div class="item-inner">
+            <div class="item-title item-floating-label">Terms &amp; Conditions</div>
+            <div class="item-input-wrap">
+              <textarea placeholder="" rows="2" id="invoice-terms">Thank you for your business. Please pay early.</textarea>
+              <span class="input-clear-button"></span>
+            </div>
+          </div>
+        </li>
+
+
+      </ul>
+
+
+      <input id="vat-percent" type="hidden" value="0">
+
+
+
+        <div class="block" style="margin-top:10px;">
+          <p>
+        <label class="checkbox"><input type="checkbox" id="vat-checkbox"><i class="icon-checkbox" id="vat-twist"></i></label>
+        <span>Include VAT: <span id="vat-value">0</span>%</span>
+        </p>
+      <button type="button" class="col button button-fill color-blue button-large" id="preview-invoice-button">Preview Invoice</button>
+      </div>
+
+
+    </form>
+
+
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+    
+
+
+
+
+              </div>
+
+           </div>
+
