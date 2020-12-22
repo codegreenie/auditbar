@@ -9,98 +9,7 @@ $$(document).on('page:init', '.page[data-name="taxcompliance"]', function (e){
   theChosenCompany = JSON.parse(theChosenCompany);
 
 
-  $$("#payment-expiry-date").keyup(function(){
-    var countEntry = $$(this).val().length;
-    var key = event.keyCode || event.charCode;
-    
-    if (countEntry == 2 && key != 8 && key != 46) {
-      $$("#payment-expiry-date").val($$("#payment-expiry-date").val() + " / ");
-    }
-  });
 
-
-  $$("#regchooseplan-play-button").click(function(){
-    if ($$("#card-number").val().trim() == "" || $$("#payment-expiry-date").val().trim() == "" || $$("#payment-cvv").val().trim() == "") {
-
-        toastMe("Please complete card details");
-    }
-    else{
-
-      $$("#regchooseplan-play-button").html("<img src='imgs/assets/loading.gif' style='max-width:50px;'>").prop("disabled", true);
-      var splitExpiryDate = $$("#payment-expiry-date").val().split(" / ");
-      $$("#expiry-month").val(splitExpiryDate[0]);
-      $$("#expiry-year").val(splitExpiryDate[1]);
-
-      
-      Paystack.init({
-            access_code: window.localStorage.getItem("regChoosePlanAccessCode"),
-            form: "auditbar-payment-form"
-        }).then(function(returnedObj){
-
-            window.PAYSTACK = returnedObj;
-            $$("#auditbar-payment-form").trigger("submit");
-
-        }).catch(function(error){
-            // If there was a problem, you may 
-            // log to console (while testing)
-            console.log("Problem connecting to payments server. Try again later");
-            // or report to your backend for debugging (in production)
-            window.reportErrorToBackend(error);
-        });
-
-    }
-  });
-
-
-
-
-
-  $$("#auditbar-payment-form").submit(function(){
-
-      PAYSTACK.card.charge().then(function(response){
-
-        console.log(response);
-
-        switch(response.status) {
-            case 'auth':
-                switch(response.data.auth) {
-                    case 'pin':
-                        paySheet.close();
-                        pinSheet.open();
-                        break;
-                    case 'phone':
-                        toastMe("Invalid Card Supplied!");
-                        paySheet.close();
-                        break;
-                    case 'otp':
-                        paySheet.close();
-                        otpSheet.open();
-                        break;
-                    case '3DS':
-                        toastMe("Invalid Card Supplied!");
-                        paySheet.close();
-                        break;
-                }
-                break;
-            case 'failed' : 
-              toastMe("Payment failed");
-              break;
-            case 'timeout':
-                toastMe("Server Timeout. Try Again");
-                $$("#push-payment-btn").html("<i class='icon f7-icons'>lock</i>&nbsp;Pay").prop("disabled", false);
-                break;
-            case 'success':
-                confirmPayment(response.data.reference);
-                //paySheet.close();
-                //paymentCompletePopup.open();
-                break;
-              }
-
-
-              });
-
-
-    });
 
 
     console.log("Welcome to the reg choose plan page");
@@ -112,128 +21,10 @@ $$(document).on('page:init', '.page[data-name="taxcompliance"]', function (e){
 
  
 
-    $$("#confirm-pin-button").click(function(){
-      if ($$("#card-pin").val().trim() == "" || $$("#card-pin").val().trim().length < 4) {
-        toastMe("Enter a valid PIN");
-      }
-      else{
-        $$(this).html("<img src='imgs/assets/loading.gif' style='max-width:50px;'>").prop("disabled", true);
-        PAYSTACK.card.charge({
-          pin: $$("#card-pin").val()
-
-        }).then(function(response){
-          console.log(response);
-          switch(response.status) {
-            case 'auth':
-                switch(response.data.auth) {
-                    case 'phone':
-                        toastMe("Unsupported Card!");
-                        pinSheet.close();
-                    case 'otp':
-                        pinSheet.close();
-                        otpSheet.open();
-                        break;
-                    case '3DS':
-                        toastMe("Unsupported Card!");
-                        pinSheet.close();
-                }
-                break;
-            case 'failed':
-                toastMe("Incorrect PIN");
-                $$("#confirm-pin-button").html("Confirm PIN").prop("disabled", false);
-                break;
-            case 'timeout':
-                toastMe("Timeout. Try Again");
-                $$("#confirm-pin-button").html("Confirm PIN").prop("disabled", false);
-              break;
-            case 'success': toastMe("success");
-            //pinSheet.close();
-            confirmPayment(response.data.reference);
-            //paymentCompletePopup.open(); 
-            break;
-      }
-
-    });
-
-      }
-
-    });
 
 
 
 
-
-    $$("#confirm-otp-button").click(function(){
-      if ($$("#card-otp").val().trim() == "") {
-        toastMe("Enter a valid OTP");
-      }
-      else{
-        $$(this).html("<img src='imgs/assets/loading.gif' style='max-width:50px;'>").prop("disabled", true);
-        PAYSTACK.card.charge({
-          pin: $$("#card-otp").val()
-
-        }).then(function(response){
-          console.log(response);
-          switch(response.status) {
-            case 'failed':
-                toastMe("Incorrect OTP");
-                $$("#confirm-otp-button").html("Confirm OTP").prop("disabled", false);
-                break;
-            case 'timeout':
-                toastMe("Timeout. Try Again");
-                $$("#confirm-otp-button").html("Confirm OTP").prop("disabled", false);
-              break;
-            case 'success': toastMe("success");
-            //otpSheet.close();
-            //paymentCompletePopup.open(); 
-            confirmPayment(reference.data.reference);
-            break;
-      }
-
-    });
-
-  }
-
-});
-
-
-
-
-    var paySheet = app.sheet.create({
-        el : '.pay-plan-sheet',
-        swipeToClose : true,
-        backdrop : true,
-        closeByOutsideClick : true,
-        closeOnEscape : true
-    });
-
-    var pinSheet = app.sheet.create({
-        el : '.pin-sheet',
-        swipeToClose : true,
-        backdrop : true,
-        closeByOutsideClick : true,
-        closeOnEscape : true
-    });
-
-
-    var otpSheet = app.sheet.create({
-        el : '.otp-sheet',
-        swipeToClose : true,
-        backdrop : true,
-        closeByOutsideClick : true,
-        closeOnEscape : true
-    });
-
-    
-
-    var paymentCompletePopup = app.popup.create({
-      el : ".payment-complete-popup"
-    });
-
-    
-
-
-    
 
 
       
@@ -241,7 +32,7 @@ $$(document).on('page:init', '.page[data-name="taxcompliance"]', function (e){
 
       taxSubscribe = function(subscriptionID){
 
-        
+        app.dialog.preloader("Please wait...");
 
       app.request.post('https://abtechnology.com.ng/auditbar/tax_compliance_request.php',
               {
@@ -302,12 +93,12 @@ $$(document).on('page:init', '.page[data-name="taxcompliance"]', function (e){
                           }
                           else{
                           app.dialog.close();
+                          app.dialog.preloader("Awaiting payment...");
                           console.log(data);
                           var parsedData = JSON.parse(data);
-                          var accessCode = parsedData.data.access_code;
-                          window.localStorage.setItem("regChoosePlanAccessCode", accessCode);
+                          var authUrl = parsedData.data.authorization_url;
+                          window.open(authUrl, "_system");
 
-                          paySheet.open();
                                                   
                       }
                           

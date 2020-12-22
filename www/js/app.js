@@ -8,8 +8,8 @@ var $$ = Dom7;
 
 // Init App
 var app = new Framework7({
-  name : 'Auditbar',
-  id: 'com.auditbar.app',
+  name : 'Netbook',
+  id: 'com.blueportal.netbook',
   root: '#app',
   theme: 'auto',
   language: 'en',
@@ -313,10 +313,6 @@ $$(document).on('page:init', '.page[data-name="slides"]', function (e){
             }
         });
         var swiper = app.swiper.get('.swiper-container');
-
-        $$("#next-btn").on("click", function(){
-          swiper.slideNext();
-        });
 
         $$("#skip-btn").click(function(){
           mainView.router.navigate("/login/");
@@ -820,98 +816,10 @@ $$(document).on('page:init', '.page[data-name="regchooseplan"]', function (e){
   var permanentReg = window.localStorage.getItem("permanentReg");
   permanentReg = JSON.parse(permanentReg);
 
-  $$("#payment-expiry-date").keyup(function(){
-    var countEntry = $$(this).val().length;
-    var key = event.keyCode || event.charCode;
-    
-    if (countEntry == 2 && key != 8 && key != 46) {
-      $$("#payment-expiry-date").val($$("#payment-expiry-date").val() + " / ");
-    }
-  });
-
-
-  $$("#regchooseplan-play-button").click(function(){
-    if ($$("#card-number").val().trim() == "" || $$("#payment-expiry-date").val().trim() == "" || $$("#payment-cvv").val().trim() == "") {
-
-        toastMe("Please complete card details");
-    }
-    else{
-
-      $$("#regchooseplan-play-button").html("<img src='imgs/assets/loading.gif' style='max-width:50px;'>").prop("disabled", true);
-      var splitExpiryDate = $$("#payment-expiry-date").val().split(" / ");
-      $$("#expiry-month").val(splitExpiryDate[0]);
-      $$("#expiry-year").val(splitExpiryDate[1]);
-
-      
-      Paystack.init({
-            access_code: window.localStorage.getItem("regChoosePlanAccessCode"),
-            form: "auditbar-payment-form"
-        }).then(function(returnedObj){
-
-            window.PAYSTACK = returnedObj;
-            $$("#auditbar-payment-form").trigger("submit");
-
-        }).catch(function(error){
-            // If there was a problem, you may 
-            // log to console (while testing)
-            console.log("Problem connecting to payments server. Try again later");
-            // or report to your backend for debugging (in production)
-            window.reportErrorToBackend(error);
-        });
-
-    }
-  });
 
 
 
 
-
-  $$("#auditbar-payment-form").submit(function(){
-
-      PAYSTACK.card.charge().then(function(response){
-
-        console.log(response);
-
-        switch(response.status) {
-            case 'auth':
-                switch(response.data.auth) {
-                    case 'pin':
-                        paySheet.close();
-                        pinSheet.open();
-                        break;
-                    case 'phone':
-                        toastMe("Invalid Card Supplied!");
-                        paySheet.close();
-                        break;
-                    case 'otp':
-                        paySheet.close();
-                        otpSheet.open();
-                        break;
-                    case '3DS':
-                        toastMe("Invalid Card Supplied!");
-                        paySheet.close();
-                        break;
-                }
-                break;
-            case 'failed' : 
-              toastMe("Payment failed");
-              break;
-            case 'timeout':
-                toastMe("Server Timeout. Try Again");
-                $$("#push-payment-btn").html("<i class='icon f7-icons'>lock</i>&nbsp;Pay").prop("disabled", false);
-                break;
-            case 'success':
-                confirmPayment(response.data.reference);
-                //paySheet.close();
-                //paymentCompletePopup.open();
-                break;
-              }
-
-
-              });
-
-
-    });
 
 
     console.log("Welcome to the reg choose plan page");
@@ -940,117 +848,12 @@ $$(document).on('page:init', '.page[data-name="regchooseplan"]', function (e){
       subscribe(3);
     });
 
-    $$("#confirm-pin-button").click(function(){
-      if ($$("#card-pin").val().trim() == "" || $$("#card-pin").val().trim().length < 4) {
-        toastMe("Enter a valid PIN");
-      }
-      else{
-        $$(this).html("<img src='imgs/assets/loading.gif' style='max-width:50px;'>").prop("disabled", true);
-        PAYSTACK.card.charge({
-          pin: $$("#card-pin").val()
-
-        }).then(function(response){
-          console.log(response);
-          switch(response.status) {
-            case 'auth':
-                switch(response.data.auth) {
-                    case 'phone':
-                        toastMe("Unsupported Card!");
-                        pinSheet.close();
-                    case 'otp':
-                        pinSheet.close();
-                        otpSheet.open();
-                        break;
-                    case '3DS':
-                        toastMe("Unsupported Card!");
-                        pinSheet.close();
-                }
-                break;
-            case 'failed':
-                toastMe("Incorrect PIN");
-                $$("#confirm-pin-button").html("Confirm PIN").prop("disabled", false);
-                break;
-            case 'timeout':
-                toastMe("Timeout. Try Again");
-                $$("#confirm-pin-button").html("Confirm PIN").prop("disabled", false);
-              break;
-            case 'success': toastMe("success");
-            //pinSheet.close();
-            confirmPayment(response.data.reference);
-            //paymentCompletePopup.open(); 
-            break;
-      }
-
-    });
-
-      }
-
-    });
 
 
 
 
 
-    $$("#confirm-otp-button").click(function(){
-      if ($$("#card-otp").val().trim() == "") {
-        toastMe("Enter a valid OTP");
-      }
-      else{
-        $$(this).html("<img src='imgs/assets/loading.gif' style='max-width:50px;'>").prop("disabled", true);
-        PAYSTACK.card.charge({
-          pin: $$("#card-otp").val()
 
-        }).then(function(response){
-          console.log(response);
-          switch(response.status) {
-            case 'failed':
-                toastMe("Incorrect OTP");
-                $$("#confirm-otp-button").html("Confirm OTP").prop("disabled", false);
-                break;
-            case 'timeout':
-                toastMe("Timeout. Try Again");
-                $$("#confirm-otp-button").html("Confirm OTP").prop("disabled", false);
-              break;
-            case 'success': toastMe("success");
-            //otpSheet.close();
-            //paymentCompletePopup.open(); 
-            confirmPayment(reference.data.reference);
-            break;
-      }
-
-    });
-
-  }
-
-});
-
-
-
-
-    var paySheet = app.sheet.create({
-        el : '.pay-plan-sheet',
-        swipeToClose : true,
-        backdrop : true,
-        closeByOutsideClick : true,
-        closeOnEscape : true
-    });
-
-    var pinSheet = app.sheet.create({
-        el : '.pin-sheet',
-        swipeToClose : true,
-        backdrop : true,
-        closeByOutsideClick : true,
-        closeOnEscape : true
-    });
-
-
-    var otpSheet = app.sheet.create({
-        el : '.otp-sheet',
-        swipeToClose : true,
-        backdrop : true,
-        closeByOutsideClick : true,
-        closeOnEscape : true
-    });
 
     
 
@@ -1128,19 +931,21 @@ $$(document).on('page:init', '.page[data-name="regchooseplan"]', function (e){
                           }
                           else{
                           app.dialog.close();
+                          app.dialog.preloader("Awaiting payment...");
                           console.log(data);
                           var parsedData = JSON.parse(data);
-                          var accessCode = parsedData.data.access_code;
-                          window.localStorage.setItem("regChoosePlanAccessCode", accessCode);
+                          var authUrl = parsedData.data.authorization_url;
+                          window.open(authUrl, "_system");
+                          confirmPayment(parsedData.data.reference);;
 
-                          paySheet.open();
+                          
                                                   
                       }
                           
                           
                          }, function(){
 
-                            
+                            app.dialog.close();
                             toastMe("Unable to create transaction now. Try again later");
                             $$("#one-k-subscription-button").html("buttonText").prop("disabled", false);
                             
@@ -1180,40 +985,81 @@ $$(document).on('page:init', '.page[data-name="regchooseplan"]', function (e){
 
 
 
+var counter = 0;
+
 
            function confirmPayment(transactionID){
 
 
-            app.request.post("https://abtechnology.com.ng/auditbar/paystack/verify_payment.php",
+            app.request.post("https://abtechnology.com.ng/auditbar/paystack/confirm_payment.php",
                         {
                           
                           "transaction_id" : transactionID                         
                           
                         },
                          function(data){
+                          
 
-                        
-                          console.log(data);
-                         
+                          console.log(JSON.parse(data));
+                          var data = JSON.parse(data);
 
-                            paySheet.close();
-                            pinSheet.close();
-                            otpSheet.close();
+
+                          if (data.status == "No payment made") {
+                            
+                            if(counter < 60){
+                              counter++;
+                              console.log(counter);
+                              confirmPayment(transactionID);
+                            }
+                            else{
+                              app.dialog.close();
+                              app.dialog.alert("Payment failed!");
+                            }
+
+                          }
+                          else{
+                            app.dialog.close();
                             paymentCompletePopup.open();
+                          }
+                          
 
-                                                                        
-                      
-                          
-                          
+
                          }, function(){
 
-                            
+                            app.dialog.close();
                             toastMe("Unable to verify transaction. Try again later");
-                            
                             
                          });
 
           }
+
+
+
+
+
+        function checkPayment(paymentRef){
+
+
+            app.request.post("https://abtechnology.com.ng/auditbar/paystack/verify_payment.php",
+                        {
+                          
+                          "transaction_id" : paymentRef                         
+                          
+                        },
+                         function(data){
+                        
+                          console.log(data);
+                          paymentCompletePopup.open();
+
+
+                         }, function(){
+
+                            toastMe("Unable to verify transaction. Try again later");
+                            
+                         });
+
+          }
+
 
 
 
@@ -1524,6 +1370,9 @@ $$(document).on('page:init', '.page[data-name="dashboard"]', function (e){
   }
 
 
+
+
+
   var timeFramePopover = app.popover.create({
       el : '.time-frame-change'
    });
@@ -1537,19 +1386,29 @@ $$(document).on('page:init', '.page[data-name="dashboard"]', function (e){
     grabCompanySummary(chosen_company_id);
   }
 
-
-  changeTimeFrame = function(timeFrame){
-
-    app.popover.close();
-
-
-      function addZero(i){
+    function addZero(i){
         if (i < 10) {
           i = "0" + i;
         }
 
         return i;
       }
+
+
+
+   var todaysDate = new Date().getFullYear() + "-" + addZero(new Date().getMonth() + 1) + "-" + addZero(new Date().getDate());
+
+      $$("#date-span").text(todaysDate);
+      
+
+
+  changeTimeFrame = function(timeFrame){
+
+    app.popover.close();
+
+
+    
+
 
 
        var dateRange = window.localStorage.getItem("dateRange");
@@ -1748,8 +1607,9 @@ $$(document).on('page:init', '.page[data-name="dashboard"]', function (e){
   var chosen_company_name = theChosenCompany.company_name;
   var chosen_company_logo = theChosenCompany.company_logo;
   var chosen_company_id = theChosenCompany.company_id;
+  var chosen_company_email = theChosenCompany.company_email;
 
-  $$(".company-name").text(chosen_company_name);
+  $$(".company-name").html(chosen_company_name + "<br><small class='text-color-gray'>" + chosen_company_email + "</small>");
   //set company logo
   if (chosen_company_logo == "") {
     $$(".company-logo").prop("src", "imgs/assets/logo.png");
@@ -1835,6 +1695,7 @@ $$(document).on('page:init', '.page[data-name="dashboard"]', function (e){
     var company_id = permanentReg.companys[i]["company_id"];
     var company_name = permanentReg.companys[i]["company_name"];
     var company_logo = permanentReg.companys[i]["company_logo"];
+    var company_email = permanentReg.companys[i]["company_email"];
 
     var peg = "<li><a class='list-button item-link' href='#' onclick=selectCompany(" + company_id + ")>" + company_name + "</a></li>";
     $$("#dashboard-company-list").append(peg);
@@ -1859,7 +1720,7 @@ $$(document).on('page:init', '.page[data-name="dashboard"]', function (e){
           var company_phone = permanentReg.companys[i]["company_phone"];
           var company_address = permanentReg.companys[i]["company_address"];
           var company_description = permanentReg.companys[i]["company_description"];
-          $$(".company-name").text(company_name);
+          $$(".company-name").html(company_name + "<br><small class='text-color-gray'>" + company_email + "</small>");
           dashboardPopover.close();
 
           //update chosen company
@@ -1927,7 +1788,7 @@ $$(document).on('page:init', '.page[data-name="dashboard"]', function (e){
                   var invoiceCurrency = window.localStorage.getItem("dashboard_currency");
                   for (var i = 0; i < cashIDs.length; i++) {
                   var thisDataView = viewDatas[i];
-                  $$("#" + cashIDs[i]).text(invoiceCurrency + "" + parseInt(dataCheck[thisDataView]).toLocaleString());
+                  $$("#" + cashIDs[i]).text(invoiceCurrency + " " + parseInt(dataCheck[thisDataView]).toLocaleString());
                   }
                   console.log(dataCheck.income_breakdown);
                   pushChart(dataCheck.income_breakdown, dataCheck.expenses_breakdown);
@@ -1954,7 +1815,7 @@ $$(document).on('page:init', '.page[data-name="dashboard"]', function (e){
          var cashIDs = ["total-income", "total-expenses", "gross-profit", "total-invoice-amount", "total-paid-invoice", "total-unpaid-invoice", "inventory", "labour", "rent", "tax", "other", "net-profit"];
 
          for (var i = 0; i < cashIDs.length; i++) {
-            $$("#" + cashIDs[i]).text(window.localStorage.getItem("dashboard_currency") + "0");
+            $$("#" + cashIDs[i]).text(window.localStorage.getItem("dashboard_currency") + " 0");
           }
           var zero_data = [
             { "group_name": "Income", "name": "0000-00-00", "value": 0 },
